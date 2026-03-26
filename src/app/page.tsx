@@ -1,7 +1,20 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+
+const spring = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.08,
+      duration: 0.55,
+      ease: [0.22, 1, 0.36, 1] as const,
+    },
+  }),
+};
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -20,6 +33,89 @@ const stagger = {
   visible: { transition: { staggerChildren: 0.1 } },
 };
 
+// Character-level typewriter for the hero title
+function TypewriterText({ text, delay = 0 }: { text: string; delay?: number }) {
+  return (
+    <span className="typewriter-wrap" aria-label={text}>
+      {text.split("").map((char, i) => (
+        <motion.span
+          key={i}
+          className="typewriter-char"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{
+            delay: delay + i * 0.04,
+            duration: 0,
+          }}
+        >
+          {char}
+        </motion.span>
+      ))}
+      <motion.span
+        className="typewriter-cursor"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: [0, 1, 0] }}
+        transition={{ delay: delay + text.length * 0.04, duration: 0.8, repeat: Infinity, ease: "linear" }}
+        aria-hidden="true"
+      >
+        _
+      </motion.span>
+    </span>
+  );
+}
+
+// Floating ambient orb
+function FloatingOrb({ className, size = 400 }: { className?: string; size?: number }) {
+  return (
+    <motion.div
+      className={`floating-orb ${className ?? ""}`}
+      style={{ width: size, height: size }}
+      animate={{
+        y: [0, -30, 0],
+        x: [0, 15, 0],
+        scale: [1, 1.04, 1],
+      }}
+      transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
+      aria-hidden="true"
+    />
+  );
+}
+
+// Scroll progress bar
+function ScrollProgress() {
+  const { scrollYProgress } = useScroll();
+  return (
+    <motion.div
+      className="scroll-progress-bar"
+      style={{ scaleX: scrollYProgress, transformOrigin: "0%" }}
+      aria-hidden="true"
+    />
+  );
+}
+
+// Scroll-down indicator with animated chevron
+function ScrollIndicator() {
+  return (
+    <motion.div
+      className="scroll-indicator"
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1.4, duration: 0.5 }}
+      aria-hidden="true"
+    >
+      <motion.div
+        animate={{ y: [0, 5, 0] }}
+        transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="6,9 12,15 18,9" />
+        </svg>
+      </motion.div>
+      <span>scroll</span>
+    </motion.div>
+  );
+}
+
 // bilibit project data
 const BILIBIT = {
   name: "bilibit",
@@ -32,26 +128,11 @@ const BILIBIT = {
   languageColor: "#3178c6",
   github: "https://github.com/AoturLab/bilibit",
   tags: [
-    {
-      label: "Node.js",
-      command: "npm install -g bilibit",
-    },
-    {
-      label: "CLI",
-      command: "clawhub install bilibit",
-    },
-    {
-      label: "BBDown",
-      command: "bilibit install-bbdown",
-    },
-    {
-      label: "Video Download",
-      command: "bibilit download <url>",
-    },
-    {
-      label: "Bilibili",
-      command: "bibilit dl --url <b23.tv/xxx>",
-    },
+    { label: "Node.js", command: "npm install -g bilibit" },
+    { label: "CLI", command: "clawhub install bilibit" },
+    { label: "BBDown", command: "bilibit install-bbdown" },
+    { label: "Video Download", command: "bibilit download <url>" },
+    { label: "Bilibili", command: "bibilit dl --url <b23.tv/xxx>" },
   ],
 };
 
@@ -67,22 +148,10 @@ const PICGEN = {
   languageColor: "#3572A5",
   github: "https://github.com/AoturLab/pic-gen",
   tags: [
-    {
-      label: "AI Art",
-      command: "clawhub install pic-gen",
-    },
-    {
-      label: "Prompt Eng",
-      command: "clawhub install pic-gen",
-    },
-    {
-      label: "Qwen Wanxiang",
-      command: "clawhub install pic-gen",
-    },
-    {
-      label: "Flux / DALL-E",
-      command: "clawhub install pic-gen",
-    },
+    { label: "AI Art", command: "clawhub install pic-gen" },
+    { label: "Prompt Eng", command: "clawhub install pic-gen" },
+    { label: "Qwen Wanxiang", command: "clawhub install pic-gen" },
+    { label: "Flux / DALL-E", command: "clawhub install pic-gen" },
   ],
 };
 
@@ -92,30 +161,6 @@ function GitHubIcon({ size = 16 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-    </svg>
-  );
-}
-
-function StarIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-    </svg>
-  );
-}
-
-function ForkIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M6 2C4.9 2 4 2.9 4 4v10c0 1.1.9 2 2 2h4v2H6c-1.1 0-2 .9-2 2v1h12v-1c0-1.1-.9-2-2-2h-4v-2h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H6zm4 6h4v8H10V8z" />
-    </svg>
-  );
-}
-
-function NpmIcon() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M0 7.334v8h6v1.333h6v-1.333h5.333V7.334H0zm6 1.333H6v5.334H4.8v-4H3.2v4H1.333V8.667H6v5.334h1.333v-4H8.8v4H10V8.667h-4zm10.667 0v1.333H20v5.334h-1.333v-4H17.2v4H15.2v-5.334h-1.333v5.334H12V8.667h4.667z" />
     </svg>
   );
 }
@@ -130,7 +175,6 @@ function ExternalIcon() {
   );
 }
 
-// Star count from GitHub API
 function useGitHubStars(owner: string, repo: string) {
   const [stars, setStars] = useState<string | null>(null);
   const [forks, setForks] = useState<string | null>(null);
@@ -158,11 +202,26 @@ function useGitHubStars(owner: string, repo: string) {
 function Nav() {
   return (
     <nav>
-      <div className="nav-logo">AoturLab</div>
+      <div className="nav-logo">
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4 }}
+        >
+          AoturLab
+        </motion.span>
+      </div>
       <ul className="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
+        {["About", "Projects", "Contact"].map((item, i) => (
+          <motion.li
+            key={item}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 + i * 0.06, duration: 0.4 }}
+          >
+            <a href={`#${item.toLowerCase()}`}>{item}</a>
+          </motion.li>
+        ))}
       </ul>
     </nav>
   );
@@ -172,6 +231,10 @@ function Nav() {
 function Hero() {
   return (
     <section id="hero">
+      {/* Ambient floating orbs */}
+      <FloatingOrb className="orb-1" size={380} />
+      <FloatingOrb className="orb-2" size={280} />
+
       <div className="container">
         <motion.div
           custom={0}
@@ -180,7 +243,11 @@ function Hero() {
           animate="visible"
           className="hero-badge"
         >
-          <span className="dot" />
+          <motion.span
+            className="dot"
+            animate={{ opacity: [1, 0.35, 1] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          />
           Available for projects
         </motion.div>
 
@@ -191,7 +258,15 @@ function Hero() {
           animate="visible"
           className="hero-title"
         >
-          Hi, I'm <span className="accent">Long Chen</span>
+          <TypewriterText text="Hi, I'm " delay={0.3} />
+          <motion.span
+            className="accent"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 + 7 * 0.04 + 0.1, duration: 0.01 }}
+          >
+            <TypewriterText text="Long Chen" delay={0.3 + 7 * 0.04 + 0.15} />
+          </motion.span>
         </motion.h1>
 
         <motion.p
@@ -218,6 +293,8 @@ function Hero() {
             Get in Touch
           </a>
         </motion.div>
+
+        <ScrollIndicator />
       </div>
     </section>
   );
@@ -255,9 +332,9 @@ function About() {
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-80px" }}
         >
-          <motion.p custom={0} variants={fadeUp} className="section-label">
+          <motion.p custom={0} variants={fadeUp} className="section-label typewriter-section">
             About
           </motion.p>
           <motion.h2 custom={1} variants={fadeUp} className="section-title">
@@ -272,8 +349,11 @@ function About() {
               <motion.div
                 key={card.title}
                 custom={3 + i}
-                variants={fadeUp}
+                variants={spring}
                 className="about-card"
+                whileHover={{ y: -4, rotateY: 2, borderColor: "rgba(232,164,76,0.5)" }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
               >
                 <h3>
                   <span>{card.icon}</span> {card.title}
@@ -312,9 +392,9 @@ function Projects() {
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-80px" }}
         >
-          <motion.p custom={0} variants={fadeUp} className="section-label">
+          <motion.p custom={0} variants={fadeUp} className="section-label typewriter-section">
             Projects
           </motion.p>
           <motion.h2 custom={1} variants={fadeUp} className="section-title">
@@ -325,64 +405,104 @@ function Projects() {
           </motion.p>
 
           <motion.div custom={3} variants={fadeUp} className="projects-grid">
-            {PROJECTS.map((project) => {
-              const tooltipKey = `${project.name}-${Math.random()}`;
-              return (
-                <div key={project.name} className="project-card">
-                  <div className="project-header">
-                    <div className="project-icon">{projectEmojis[project.name]}</div>
-                    <div style={{ flex: 1 }}>
-                      <h3 className="project-title">
-                        <a href={project.github} target="_blank" rel="noopener noreferrer">
-                          {project.fullName}
-                        </a>
-                      </h3>
-                    </div>
+            {PROJECTS.map((project, pIdx) => (
+              <motion.div
+                key={project.name}
+                className="project-card"
+                initial={{ opacity: 0, y: 24, scale: 0.97 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  delay: pIdx * 0.12,
+                  duration: 0.55,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                whileHover={{ y: -5 }}
+              >
+                <div className="project-header">
+                  <motion.div
+                    className="project-icon"
+                    whileHover={{ rotate: [0, -8, 8, -4, 0], scale: 1.08 }}
+                    transition={{ duration: 0.4 }}
+                  >
+                    {projectEmojis[project.name]}
+                  </motion.div>
+                  <div style={{ flex: 1 }}>
+                    <h3 className="project-title">
+                      <a href={project.github} target="_blank" rel="noopener noreferrer">
+                        {project.fullName}
+                      </a>
+                    </h3>
                   </div>
+                </div>
 
-                  <p className="project-desc">{project.description}</p>
+                <p className="project-desc">{project.description}</p>
 
-                  <div className="project-tags">
-                    {project.tags.map((tag) => (
-                      <div
-                        key={tag.label}
-                        className="tag-wrapper"
-                        onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: true }))}
-                        onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: false }))}
+                <div className="project-tags">
+                  {project.tags.map((tag, tIdx) => (
+                    <motion.div
+                      key={tag.label}
+                      className="tag-wrapper"
+                      onHoverStart={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: true }))}
+                      onHoverEnd={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: false }))}
+                      initial={{ opacity: 0, x: -8 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: pIdx * 0.12 + tIdx * 0.05, duration: 0.3 }}
+                    >
+                      <motion.span
+                        className={`tag${tag.label === project.tags[0].label ? " primary" : ""}`}
+                        whileHover={{ x: 3 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 25 }}
                       >
-                        <span className={`tag${tag.label === project.tags[0].label ? " primary" : ""}`}>
-                          {tag.label}
-                        </span>
+                        {tag.label}
+                      </motion.span>
+                      <AnimatePresence>
                         {skillTooltips[`${project.name}-${tag.label}`] && (
-                          <div className="skill-tooltip">
+                          <motion.div
+                            className="skill-tooltip"
+                            initial={{ opacity: 0, scale: 0.88, y: 4 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.88, y: 4 }}
+                            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+                          >
                             <code>{tag.command}</code>
-                            <button
+                            <motion.button
                               className="skill-tooltip-copy"
                               onClick={() => copyCommand(tag.command)}
+                              whileTap={{ scale: 0.92 }}
                             >
                               {copied === tag.command ? "✓" : "Copy"}
-                            </button>
-                          </div>
+                            </motion.button>
+                          </motion.div>
                         )}
-                      </div>
-                    ))}
-                  </div>
+                      </AnimatePresence>
+                    </motion.div>
+                  ))}
+                </div>
 
-                  <div className="project-links">
-                    <span
-                      className="project-link primary"
-                      style={{ position: 'relative' }}
-                      onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: true }))}
-                      onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: false }))}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                        <path d="M2 17l10 5 10-5"/>
-                        <path d="M2 12l10 5 10-5"/>
-                      </svg>
-                      Install Skill
+                <div className="project-links">
+                  <span
+                    className="project-link primary"
+                    style={{ position: "relative" }}
+                    onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: true }))}
+                    onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: false }))}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                      <path d="M2 17l10 5 10-5" />
+                      <path d="M2 12l10 5 10-5" />
+                    </svg>
+                    Install Skill
+                    <AnimatePresence>
                       {skillTooltips[`${project.name}-skill`] && (
-                        <div className="skill-install-tooltip">
+                        <motion.div
+                          className="skill-install-tooltip"
+                          initial={{ opacity: 0, scale: 0.92, y: 6 }}
+                          animate={{ opacity: 1, scale: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.92, y: 6 }}
+                          transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                        >
                           <p className="skill-install-hint">
                             Copy and send to your bot:
                           </p>
@@ -395,31 +515,34 @@ function Projects() {
                             <div className="skill-step-command">
                               <code>clawhub install {project.name}</code>
                             </div>
-                            <button
+                            <motion.button
                               className="skill-copy-btn"
                               onClick={() => copyCommand(`Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.`)}
+                              whileTap={{ scale: 0.92 }}
                             >
                               {copied === `Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.` ? "✓ Copied" : "Copy Text"}
-                            </button>
+                            </motion.button>
                           </div>
-                        </div>
+                        </motion.div>
                       )}
-                    </span>
+                    </AnimatePresence>
+                  </span>
 
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="project-link"
-                    >
-                      <GitHubIcon size={14} />
-                      GitHub
-                      <ExternalIcon />
-                    </a>
-                  </div>
+                  <motion.a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-link"
+                    whileHover={{ y: -1 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    <GitHubIcon size={14} />
+                    GitHub
+                    <ExternalIcon />
+                  </motion.a>
                 </div>
-              );
-            })}
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
@@ -436,9 +559,9 @@ function Contact() {
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ once: true, margin: "-80px" }}
         >
-          <motion.p custom={0} variants={fadeUp} className="section-label">
+          <motion.p custom={0} variants={fadeUp} className="section-label typewriter-section">
             Contact
           </motion.p>
           <motion.h2 custom={1} variants={fadeUp} className="section-title">
@@ -449,63 +572,88 @@ function Contact() {
           </motion.p>
 
           <motion.div custom={3} variants={fadeUp} className="contact-grid">
-            {/* Discord card with embedded QR */}
-            <a
-              href="https://discord.gg/5U6VttXUb8"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-discord-card"
-            >
-              <div className="contact-discord-left">
-                <div className="contact-item-icon">
+            {[
+              {
+                href: "https://discord.gg/5U6VttXUb8",
+                external: true,
+                type: "discord",
+                icon: (
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+                    <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z" />
                   </svg>
-                </div>
-                <div>
-                  <p className="contact-item-label">Discord</p>
-                  <p className="contact-item-desc">讨论群</p>
-                </div>
-              </div>
-              <div className="contact-discord-right">
-                <img src="/discord-qr.png" alt="Discord QR Code" width="72" height="72" />
-              </div>
-            </a>
-
-            {/* Twitter card */}
-            <a
-              href="https://x.com/longchen_i"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="contact-item"
-            >
-              <div className="contact-item-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </div>
-              <div>
-                <p className="contact-item-label">Twitter / X</p>
-                <p className="contact-item-desc">@longchen_i</p>
-              </div>
-            </a>
-
-            {/* Email card */}
-            <a
-              href="mailto:chenlong@aotur.com"
-              className="contact-item"
-            >
-              <div className="contact-item-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                  <polyline points="22,6 12,13 2,6"/>
-                </svg>
-              </div>
-              <div>
-                <p className="contact-item-label">Email</p>
-                <p className="contact-item-desc">chenlong@aotur.com</p>
-              </div>
-            </a>
+                ),
+                label: "Discord",
+                desc: "讨论群",
+                qr: true,
+              },
+              {
+                href: "https://x.com/longchen_i",
+                external: true,
+                type: "twitter",
+                icon: (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                ),
+                label: "Twitter / X",
+                desc: "@longchen_i",
+              },
+              {
+                href: "mailto:chenlong@aotur.com",
+                external: false,
+                type: "email",
+                icon: (
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                ),
+                label: "Email",
+                desc: "chenlong@aotur.com",
+              },
+            ].map((item, i) => (
+              <motion.div
+                key={item.type}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={{ y: -4 }}
+              >
+                {item.qr ? (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-discord-card"
+                  >
+                    <div className="contact-discord-left">
+                      <div className="contact-item-icon">{item.icon}</div>
+                      <div>
+                        <p className="contact-item-label">{item.label}</p>
+                        <p className="contact-item-desc">{item.desc}</p>
+                      </div>
+                    </div>
+                    <div className="contact-discord-right">
+                      <img src="/discord-qr.png" alt="Discord QR Code" width="72" height="72" />
+                    </div>
+                  </a>
+                ) : (
+                  <a
+                    href={item.href}
+                    target={item.external ? "_blank" : undefined}
+                    rel={item.external ? "noopener noreferrer" : undefined}
+                    className="contact-item"
+                  >
+                    <div className="contact-item-icon">{item.icon}</div>
+                    <div>
+                      <p className="contact-item-label">{item.label}</p>
+                      <p className="contact-item-desc">{item.desc}</p>
+                    </div>
+                  </a>
+                )}
+              </motion.div>
+            ))}
           </motion.div>
         </motion.div>
       </div>
@@ -537,6 +685,7 @@ function Footer() {
 export default function Home() {
   return (
     <>
+      <ScrollProgress />
       <Nav />
       <main>
         <Hero />
