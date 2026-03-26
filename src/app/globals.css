@@ -472,10 +472,42 @@ nav {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  max-width: 780px;
+  max-width: 680px;
   margin: 0 auto;
+}
+
+.contact-discord-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.contact-discord-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(232, 164, 76, 0.1);
+}
+
+.contact-discord-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.contact-discord-right img {
+  border-radius: 6px;
+  background: #fff;
+  padding: 4px;
+  border: 1px solid var(--border);
 }
 
 .contact-item {
@@ -523,7 +555,7 @@ nav {
   font-family: 'JetBrains Mono', monospace;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
   .contact-grid {
     grid-template-columns: 1fr;
     max-width: 360px;
