@@ -369,45 +369,42 @@ function Projects() {
                   </div>
 
                   <div className="project-links">
-                    <div
-                      className="project-link-wrapper"
+                    <span
+                      className="project-link primary"
+                      style={{ position: 'relative' }}
                       onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: true }))}
                       onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: false }))}
                     >
-                      <span className="project-link primary">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                          <path d="M2 17l10 5 10-5"/>
-                          <path d="M2 12l10 5 10-5"/>
-                        </svg>
-                        Install Skill
-                      </span>
-                      <div className="skill-install-tooltip" style={{ position: 'absolute', top: '100%', left: 0, zIndex: 9999 }}>
-                        {skillTooltips[`${project.name}-skill`] && (
-                          <div>
-                            <p className="skill-install-hint">
-                              Copy and send to your bot:
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5"/>
+                        <path d="M2 12l10 5 10-5"/>
+                      </svg>
+                      Install Skill
+                      {skillTooltips[`${project.name}-skill`] && (
+                        <div className="skill-install-tooltip">
+                          <p className="skill-install-hint">
+                            Copy and send to your bot:
+                          </p>
+                          <div className="skill-message-box">
+                            <p className="skill-message-text">
+                              Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the {project.name} skill.
                             </p>
-                            <div className="skill-message-box">
-                              <p className="skill-message-text">
-                                Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the {project.name} skill.
-                              </p>
-                            </div>
-                            <div className="skill-install-copy-row">
-                              <div className="skill-step-command">
-                                <code>clawhub install {project.name}</code>
-                              </div>
-                              <button
-                                className="skill-copy-btn"
-                                onClick={() => copyCommand(`Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.`)}
-                              >
-                                {copied === `Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.` ? "✓ Copied" : "Copy Text"}
-                              </button>
-                            </div>
                           </div>
-                        )}
-                      </div>
-                    </div>
+                          <div className="skill-install-copy-row">
+                            <div className="skill-step-command">
+                              <code>clawhub install {project.name}</code>
+                            </div>
+                            <button
+                              className="skill-copy-btn"
+                              onClick={() => copyCommand(`Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.`)}
+                            >
+                              {copied === `Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.` ? "✓ Copied" : "Copy Text"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </span>
 
                     <a
                       href={project.github}
