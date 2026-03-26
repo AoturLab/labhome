@@ -258,7 +258,7 @@ function About() {
 // Projects Section
 function Projects() {
   const { stars, forks } = useGitHubStars("AoturLab", "bilibit");
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [skillTooltip, setSkillTooltip] = useState(false);
   const [copied, setCopied] = useState<string | null>(null);
 
   const copyCommand = (cmd: string) => {
@@ -324,34 +324,6 @@ function Projects() {
               </span>
             </div>
 
-            <div className="project-tags">
-              {BILIBIT.tags.map((tag) => (
-                <div
-                  key={tag.label}
-                  className="tag-wrapper"
-                  onMouseEnter={() => setActiveTooltip(tag.label)}
-                  onMouseLeave={() => setActiveTooltip(null)}
-                >
-                  <span className={`tag${tag.label === "Node.js" ? " primary" : ""}`}>
-                    {tag.label}
-                  </span>
-                  {activeTooltip === tag.label && (
-                    <div className="skill-tooltip">
-                      <div className="skill-tooltip-command">
-                        <code>{tag.command}</code>
-                        <button
-                          className="skill-tooltip-copy"
-                          onClick={() => copyCommand(tag.command)}
-                        >
-                          {copied === tag.command ? "✓" : "Copy"}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-
             <div className="project-links">
               <a
                 href={BILIBIT.github}
@@ -363,6 +335,62 @@ function Projects() {
                 View on GitHub
                 <ExternalIcon />
               </a>
+
+              <div
+                className="project-link-wrapper"
+                onMouseEnter={() => setSkillTooltip(true)}
+                onMouseLeave={() => setSkillTooltip(false)}
+              >
+                <span className="project-link">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                  </svg>
+                  Install Skill
+                </span>
+                {skillTooltip && (
+                  <div className="skill-install-tooltip">
+                    <p className="skill-install-title">Install bilibit to OpenClaw</p>
+                    <div className="skill-install-step">
+                      <span className="skill-step-label">1. Install ClawHub (if not installed)</span>
+                      <div className="skill-step-command">
+                        <code>npm install -g clawhub</code>
+                        <button
+                          className="skill-copy-btn"
+                          onClick={() => copyCommand("npm install -g clawhub")}
+                        >
+                          {copied === "npm install -g clawhub" ? "✓" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="skill-install-step">
+                      <span className="skill-step-label">2. Install ClawHub Store (CLI)</span>
+                      <div className="skill-step-command">
+                        <code>clawhub store add clawhub-cli</code>
+                        <button
+                          className="skill-copy-btn"
+                          onClick={() => copyCommand("clawhub store add clawhub-cli")}
+                        >
+                          {copied === "clawhub store add clawhub-cli" ? "✓" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
+                    <div className="skill-install-step">
+                      <span className="skill-step-label">3. Install bilibit Skill</span>
+                      <div className="skill-step-command">
+                        <code>clawhub install bilibit</code>
+                        <button
+                          className="skill-copy-btn"
+                          onClick={() => copyCommand("clawhub install bilibit")}
+                        >
+                          {copied === "clawhub install bilibit" ? "✓" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         </motion.div>
