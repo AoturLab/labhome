@@ -470,48 +470,34 @@ nav {
   background: var(--bg-surface);
 }
 
-.contact-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 3rem;
-  flex-wrap: wrap;
-  max-width: 640px;
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  max-width: 780px;
   margin: 0 auto;
 }
 
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  flex: 1;
-  min-width: 280px;
-}
-
-.contact-discord,
-.contact-email {
+.contact-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1.25rem 1.5rem;
+  padding: 1.25rem 1.25rem;
   background: var(--bg-base);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--text-primary);
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
-  cursor: pointer;
 }
 
-.contact-discord:hover,
-.contact-email:hover {
+.contact-item:hover {
   border-color: var(--accent);
   transform: translateY(-2px);
   box-shadow: 0 4px 20px rgba(232, 164, 76, 0.1);
 }
 
-.contact-discord-icon,
-.contact-email-icon {
+.contact-item-icon {
   width: 44px;
   height: 44px;
   background: var(--accent-subtle);
@@ -524,42 +510,23 @@ nav {
   border: 1px solid rgba(232, 164, 76, 0.2);
 }
 
-.contact-link-label {
-  font-size: 1rem;
+.contact-item-label {
+  font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.15rem;
 }
 
-.contact-link-desc {
-  font-size: 0.85rem;
+.contact-item-desc {
+  font-size: 0.8rem;
   color: var(--text-secondary);
   font-family: 'JetBrains Mono', monospace;
 }
 
-.contact-qr {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.contact-qr img {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: #fff;
-  padding: 8px;
-}
-
-.contact-qr-label {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
-}
-
-@media (max-width: 640px) {
-  .contact-wrapper {
-    flex-direction: column;
+@media (max-width: 700px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    max-width: 360px;
   }
 }
 
