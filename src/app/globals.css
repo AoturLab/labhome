@@ -408,6 +408,54 @@ nav {
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.tag-wrapper {
+  position: relative;
+}
+
+.skill-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.skill-tooltip-command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 4px 16px rgba(232, 164, 76, 0.15);
+}
+
+.skill-tooltip-command code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+.skill-tooltip-copy {
+  background: var(--accent);
+  color: var(--bg-base);
+  border: none;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.skill-tooltip-copy:hover {
+  opacity: 0.85;
 }
 
 .tag {
@@ -472,9 +520,9 @@ nav {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  max-width: 680px;
+  max-width: 820px;
   margin: 0 auto;
 }
 
@@ -555,7 +603,7 @@ nav {
   font-family: 'JetBrains Mono', monospace;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   .contact-grid {
     grid-template-columns: 1fr;
     max-width: 360px;

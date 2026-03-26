@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 
 const fadeUp = {
@@ -30,9 +30,29 @@ const BILIBIT = {
   forks: "89",
   language: "TypeScript",
   languageColor: "#3178c6",
-  npm: "https://www.npmjs.com/package/bilibit",
   github: "https://github.com/AoturLab/bilibit",
-  tags: ["Node.js", "CLI", "BBDown", "Video Download", "Bilibili"],
+  tags: [
+    {
+      label: "Node.js",
+      command: "npm install -g bilibit",
+    },
+    {
+      label: "CLI",
+      command: "clawhub install bilibit",
+    },
+    {
+      label: "BBDown",
+      command: "bilibit install-bbdown",
+    },
+    {
+      label: "Video Download",
+      command: "bilibit download <url>",
+    },
+    {
+      label: "Bilibili",
+      command: "bilibit dl --url <b23.tv/xxx>",
+    },
+  ],
 };
 
 function GitHubIcon({ size = 16 }: { size?: number }) {
@@ -238,6 +258,15 @@ function About() {
 // Projects Section
 function Projects() {
   const { stars, forks } = useGitHubStars("AoturLab", "bilibit");
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
+
+  const copyCommand = (cmd: string) => {
+    navigator.clipboard.writeText(cmd).then(() => {
+      setCopied(cmd);
+      setTimeout(() => setCopied(null), 2000);
+    });
+  };
 
   return (
     <section id="projects">
@@ -297,12 +326,29 @@ function Projects() {
 
             <div className="project-tags">
               {BILIBIT.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className={`tag${tag === "Node.js" ? " primary" : ""}`}
+                <div
+                  key={tag.label}
+                  className="tag-wrapper"
+                  onMouseEnter={() => setActiveTooltip(tag.label)}
+                  onMouseLeave={() => setActiveTooltip(null)}
                 >
-                  {tag}
-                </span>
+                  <span className={`tag${tag.label === "Node.js" ? " primary" : ""}`}>
+                    {tag.label}
+                  </span>
+                  {activeTooltip === tag.label && (
+                    <div className="skill-tooltip">
+                      <div className="skill-tooltip-command">
+                        <code>{tag.command}</code>
+                        <button
+                          className="skill-tooltip-copy"
+                          onClick={() => copyCommand(tag.command)}
+                        >
+                          {copied === tag.command ? "✓" : "Copy"}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
 
@@ -314,17 +360,7 @@ function Projects() {
                 className="project-link primary"
               >
                 <GitHubIcon size={14} />
-                GitHub
-                <ExternalIcon />
-              </a>
-              <a
-                href={BILIBIT.npm}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="project-link"
-              >
-                <NpmIcon />
-                npm
+                View on GitHub
                 <ExternalIcon />
               </a>
             </div>
@@ -397,6 +433,23 @@ function Contact() {
                 <p className="contact-item-desc">@longchen_i</p>
               </div>
             </a>
+
+            {/* Email card */}
+            <a
+              href="mailto:chenlong@aotur.com"
+              className="contact-item"
+            >
+              <div className="contact-item-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                  <polyline points="22,6 12,13 2,6"/>
+                </svg>
+              </div>
+              <div>
+                <p className="contact-item-label">Email</p>
+                <p className="contact-item-desc">chenlong@aotur.com</p>
+              </div>
+            </a>
           </motion.div>
         </motion.div>
       </div>
@@ -418,9 +471,6 @@ function Footer() {
           </a>
           <a href="https://x.com/longchen_i" target="_blank" rel="noopener noreferrer">
             Twitter
-          </a>
-          <a href="mailto:chenlong@aotur.com">
-            chenlong@aotur.com
           </a>
         </div>
       </div>
