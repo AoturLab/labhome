@@ -297,30 +297,35 @@ nav {
 
 /* Projects */
 #projects {
-  background: var(--bg-base);
+  background: radial-gradient(ellipse at 50% 100%, rgba(232, 164, 76, 0.04) 0%, transparent 70%);
 }
 
-.project-main {
+.projects-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.project-card {
   background: var(--bg-surface);
   border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 2.5rem;
-  max-width: 700px;
-  margin: 0 auto;
-  width: 100%;
+  border-radius: 16px;
+  padding: 1.75rem;
   position: relative;
   overflow: visible;
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
   z-index: 1;
 }
 
-.project-main:hover {
+.project-card:hover {
   border-color: rgba(232, 164, 76, 0.5);
   transform: translateY(-4px);
   box-shadow: 0 8px 32px rgba(232, 164, 76, 0.1);
 }
 
-.project-main::before {
+.project-card::before {
   content: '';
   position: absolute;
   top: 0;
@@ -328,6 +333,7 @@ nav {
   right: 0;
   height: 3px;
   background: var(--accent);
+  border-radius: 16px 16px 0 0;
 }
 
 .project-header {
@@ -508,6 +514,57 @@ nav {
   color: var(--accent);
 }
 
+.tag-wrapper {
+  position: relative;
+}
+
+.tag-wrapper .skill-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.6rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(232, 164, 76, 0.15);
+}
+
+.tag-wrapper .skill-tooltip code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accent);
+}
+
+.tag-wrapper .skill-tooltip-copy {
+  background: var(--accent);
+  color: var(--bg-base);
+  border: none;
+  border-radius: 4px;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+
+.tag-wrapper .skill-tooltip-copy:hover {
+  opacity: 0.85;
+}
+
+.project-tags {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+
 .project-links {
   display: flex;
   gap: 0.75rem;
@@ -640,6 +697,10 @@ nav {
   .contact-grid {
     grid-template-columns: 1fr;
     max-width: 360px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
   }
 }
 

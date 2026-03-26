@@ -25,7 +25,7 @@ const BILIBIT = {
   name: "bilibit",
   fullName: "bilibit",
   description:
-    "A powerful CLI tool for downloading videos and subtitles from Bilibili. Supports full-quality downloads, multi-threaded fetching, and automatic subtitle extraction. Built with Node.js and powered by BBDown.",
+    "A powerful CLI tool for downloading videos and subtitles from Bilibili. Supports full-quality downloads, multi-threaded fetching, and automatic subtitle extraction.",
   stars: "1.1k",
   forks: "89",
   language: "TypeScript",
@@ -46,14 +46,47 @@ const BILIBIT = {
     },
     {
       label: "Video Download",
-      command: "bilibit download <url>",
+      command: "bibilit download <url>",
     },
     {
       label: "Bilibili",
-      command: "bilibit dl --url <b23.tv/xxx>",
+      command: "bibilit dl --url <b23.tv/xxx>",
     },
   ],
 };
+
+// pic-gen project data
+const PICGEN = {
+  name: "pic-gen",
+  fullName: "pic-gen",
+  description:
+    "AI image generation and prompt optimization tool. A Skill supporting multiple models: Qwen Wanxiang, Banana (Flux), and DALL-E 3. Transform simple descriptions into professional prompts.",
+  stars: "127",
+  forks: "12",
+  language: "Python",
+  languageColor: "#3572A5",
+  github: "https://github.com/AoturLab/pic-gen",
+  tags: [
+    {
+      label: "AI Art",
+      command: "clawhub install pic-gen",
+    },
+    {
+      label: "Prompt Eng",
+      command: "clawhub install pic-gen",
+    },
+    {
+      label: "Qwen Wanxiang",
+      command: "clawhub install pic-gen",
+    },
+    {
+      label: "Flux / DALL-E",
+      command: "clawhub install pic-gen",
+    },
+  ],
+};
+
+const PROJECTS = [BILIBIT, PICGEN];
 
 function GitHubIcon({ size = 16 }: { size?: number }) {
   return (
@@ -257,8 +290,7 @@ function About() {
 
 // Projects Section
 function Projects() {
-  const { stars, forks } = useGitHubStars("AoturLab", "bilibit");
-  const [skillTooltip, setSkillTooltip] = useState(false);
+  const [skillTooltips, setSkillTooltips] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState<string | null>(null);
 
   const copyCommand = (cmd: string) => {
@@ -266,6 +298,11 @@ function Projects() {
       setCopied(cmd);
       setTimeout(() => setCopied(null), 2000);
     });
+  };
+
+  const projectEmojis: Record<string, string> = {
+    bilibit: "🎬",
+    "pic-gen": "🎨",
   };
 
   return (
@@ -281,99 +318,109 @@ function Projects() {
             Projects
           </motion.p>
           <motion.h2 custom={1} variants={fadeUp} className="section-title">
-            Featured Project
+            Open Source Works
           </motion.h2>
           <motion.p custom={2} variants={fadeUp} className="section-desc">
-            The core project I'm actively maintaining and developing.
+            Skills and tools I'm actively maintaining.
           </motion.p>
 
-          <motion.div custom={3} variants={fadeUp} className="project-main">
-            <div className="project-header">
-              <div className="project-icon">🎬</div>
-              <div style={{ flex: 1 }}>
-                <h3 className="project-title">
-                  <a href={BILIBIT.github} target="_blank" rel="noopener noreferrer">
-                    {BILIBIT.fullName}
-                  </a>
-                </h3>
-              </div>
-            </div>
-
-            <p className="project-desc">{BILIBIT.description}</p>
-
-            <div className="project-stats">
-              <span className="stat stars">
-                <StarIcon />
-                {stars ?? BILIBIT.stars} stars
-              </span>
-              <span className="stat forks">
-                <ForkIcon />
-                {forks ?? BILIBIT.forks} forks
-              </span>
-              <span className="stat">
-                <span
-                  style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: "50%",
-                    background: BILIBIT.languageColor,
-                    display: "inline-block",
-                  }}
-                />
-                {BILIBIT.language}
-              </span>
-            </div>
-
-            <div className="project-links">
-              <div
-                className="project-link-wrapper"
-                onMouseEnter={() => setSkillTooltip(true)}
-                onMouseLeave={() => setSkillTooltip(false)}
-              >
-                <span className="project-link primary">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
-                    <path d="M2 17l10 5 10-5"/>
-                    <path d="M2 12l10 5 10-5"/>
-                  </svg>
-                  Install Skill
-                </span>
-                {skillTooltip && (
-                  <div className="skill-install-tooltip">
-                    <p className="skill-install-hint">
-                      Copy and send to your bot:
-                    </p>
-                    <div className="skill-message-box">
-                      <p className="skill-message-text">
-                        Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill.
-                      </p>
-                    </div>
-                    <div className="skill-install-copy-row">
-                      <div className="skill-step-command">
-                        <code>clawhub install bilibit</code>
-                      </div>
-                      <button
-                        className="skill-copy-btn"
-                        onClick={() => copyCommand("Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill.")}
-                      >
-                        {copied === "Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill." ? "✓ Copied" : "Copy Text"}
-                      </button>
+          <motion.div custom={3} variants={fadeUp} className="projects-grid">
+            {PROJECTS.map((project) => {
+              const tooltipKey = `${project.name}-${Math.random()}`;
+              return (
+                <div key={project.name} className="project-card">
+                  <div className="project-header">
+                    <div className="project-icon">{projectEmojis[project.name]}</div>
+                    <div style={{ flex: 1 }}>
+                      <h3 className="project-title">
+                        <a href={project.github} target="_blank" rel="noopener noreferrer">
+                          {project.fullName}
+                        </a>
+                      </h3>
                     </div>
                   </div>
-                )}
-              </div>
 
-              <a
-                href={BILIBIT.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="project-link"
-              >
-                <GitHubIcon size={14} />
-                View on GitHub
-                <ExternalIcon />
-              </a>
-            </div>
+                  <p className="project-desc">{project.description}</p>
+
+                  <div className="project-tags">
+                    {project.tags.map((tag) => (
+                      <div
+                        key={tag.label}
+                        className="tag-wrapper"
+                        onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: true }))}
+                        onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-${tag.label}`]: false }))}
+                      >
+                        <span className={`tag${tag.label === project.tags[0].label ? " primary" : ""}`}>
+                          {tag.label}
+                        </span>
+                        {skillTooltips[`${project.name}-${tag.label}`] && (
+                          <div className="skill-tooltip">
+                            <code>{tag.command}</code>
+                            <button
+                              className="skill-tooltip-copy"
+                              onClick={() => copyCommand(tag.command)}
+                            >
+                              {copied === tag.command ? "✓" : "Copy"}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="project-links">
+                    <div
+                      className="project-link-wrapper"
+                      onMouseEnter={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: true }))}
+                      onMouseLeave={() => setSkillTooltips(t => ({ ...t, [`${project.name}-skill`]: false }))}
+                    >
+                      <span className="project-link primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                          <path d="M2 17l10 5 10-5"/>
+                          <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                        Install Skill
+                      </span>
+                      {skillTooltips[`${project.name}-skill`] && (
+                        <div className="skill-install-tooltip">
+                          <p className="skill-install-hint">
+                            Copy and send to your bot:
+                          </p>
+                          <div className="skill-message-box">
+                            <p className="skill-message-text">
+                              Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the {project.name} skill.
+                            </p>
+                          </div>
+                          <div className="skill-install-copy-row">
+                            <div className="skill-step-command">
+                              <code>clawhub install {project.name}</code>
+                            </div>
+                            <button
+                              className="skill-copy-btn"
+                              onClick={() => copyCommand(`Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.`)}
+                            >
+                              {copied === `Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.` ? "✓ Copied" : "Copy Text"}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="project-link"
+                    >
+                      <GitHubIcon size={14} />
+                      GitHub
+                      <ExternalIcon />
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </motion.div>
         </motion.div>
       </div>
