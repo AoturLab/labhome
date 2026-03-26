@@ -138,7 +138,7 @@ function Hero() {
           animate="visible"
           className="hero-title"
         >
-          Hi, I'm <span className="gradient">Long Chen</span>
+          Hi, I'm <span className="accent">Long Chen</span>
         </motion.h1>
 
         <motion.p
@@ -273,11 +273,11 @@ function Projects() {
             <p className="project-desc">{BILIBIT.description}</p>
 
             <div className="project-stats">
-              <span className="stat">
+              <span className="stat stars">
                 <StarIcon />
                 {stars ?? BILIBIT.stars} stars
               </span>
-              <span className="stat">
+              <span className="stat forks">
                 <ForkIcon />
                 {forks ?? BILIBIT.forks} forks
               </span>
