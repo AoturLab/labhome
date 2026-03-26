@@ -309,8 +309,9 @@ nav {
   margin: 0 auto;
   width: 100%;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  z-index: 1;
 }
 
 .project-main:hover {
