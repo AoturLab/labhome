@@ -351,42 +351,24 @@ function Projects() {
                 </span>
                 {skillTooltip && (
                   <div className="skill-install-tooltip">
-                    <p className="skill-install-title">Install bilibit to OpenClaw</p>
-                    <div className="skill-install-step">
-                      <span className="skill-step-label">1. Install ClawHub (if not installed)</span>
-                      <div className="skill-step-command">
-                        <code>npm install -g clawhub</code>
-                        <button
-                          className="skill-copy-btn"
-                          onClick={() => copyCommand("npm install -g clawhub")}
-                        >
-                          {copied === "npm install -g clawhub" ? "✓" : "Copy"}
-                        </button>
-                      </div>
+                    <p className="skill-install-hint">
+                      Copy and send to your bot:
+                    </p>
+                    <div className="skill-message-box">
+                      <p className="skill-message-text">
+                        Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill.
+                      </p>
                     </div>
-                    <div className="skill-install-step">
-                      <span className="skill-step-label">2. Install ClawHub Store (CLI)</span>
-                      <div className="skill-step-command">
-                        <code>clawhub store add clawhub-cli</code>
-                        <button
-                          className="skill-copy-btn"
-                          onClick={() => copyCommand("clawhub store add clawhub-cli")}
-                        >
-                          {copied === "clawhub store add clawhub-cli" ? "✓" : "Copy"}
-                        </button>
-                      </div>
-                    </div>
-                    <div className="skill-install-step">
-                      <span className="skill-step-label">3. Install bilibit Skill</span>
+                    <div className="skill-install-copy-row">
                       <div className="skill-step-command">
                         <code>clawhub install bilibit</code>
-                        <button
-                          className="skill-copy-btn"
-                          onClick={() => copyCommand("clawhub install bilibit")}
-                        >
-                          {copied === "clawhub install bilibit" ? "✓" : "Copy"}
-                        </button>
                       </div>
+                      <button
+                        className="skill-copy-btn"
+                        onClick={() => copyCommand("Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill.")}
+                      >
+                        {copied === "Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the bilibit skill." ? "✓ Copied" : "Copy Text"}
+                      </button>
                     </div>
                   </div>
                 )}

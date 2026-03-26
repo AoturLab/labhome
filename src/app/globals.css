@@ -418,73 +418,76 @@ nav {
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
-  z-index: 20;
+  z-index: 9999;
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   border-radius: var(--radius-lg);
   padding: 1rem;
-  width: 340px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  width: 380px;
+  box-shadow: 0 8px 32px rgba(232, 164, 76, 0.2);
+  overflow: visible;
 }
 
-.skill-install-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.75rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.skill-install-step {
-  margin-bottom: 0.6rem;
-}
-
-.skill-install-step:last-child {
-  margin-bottom: 0;
-}
-
-.skill-step-label {
-  display: block;
+.skill-install-hint {
   font-size: 0.72rem;
   color: var(--text-secondary);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
-.skill-step-command {
+.skill-message-box {
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.skill-message-text {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.skill-install-copy-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.skill-step-command {
+  flex: 1;
   background: var(--bg-base);
   border: 1px solid var(--border);
   border-radius: 6px;
   padding: 0.35rem 0.6rem;
+  overflow: hidden;
 }
 
 .skill-step-command code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.75rem;
-  color: var(--accent);
-  flex: 1;
+  color: var(--text-muted);
+  white-space: nowrap;
 }
 
 .skill-copy-btn {
-  background: var(--accent-subtle);
-  color: var(--accent);
-  border: 1px solid rgba(232, 164, 76, 0.3);
-  border-radius: 4px;
-  padding: 0.15rem 0.5rem;
-  font-size: 0.68rem;
+  background: var(--accent);
+  color: var(--bg-base);
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
   white-space: nowrap;
-  transition: all 0.2s;
+  transition: opacity 0.2s;
+  flex-shrink: 0;
 }
 
 .skill-copy-btn:hover {
-  background: var(--accent);
-  color: var(--bg-base);
+  opacity: 0.85;
 }
 
 .tag {
