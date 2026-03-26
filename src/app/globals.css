@@ -470,59 +470,97 @@ nav {
   background: var(--bg-surface);
 }
 
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  max-width: 700px;
+.contact-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+  max-width: 640px;
   margin: 0 auto;
-  width: 100%;
 }
 
-.contact-card {
-  background: var(--bg-base);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 1.5rem;
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.contact-discord,
+.contact-email {
   display: flex;
   align-items: center;
   gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-base);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--text-primary);
   transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
 }
 
-.contact-card:hover {
-  border-color: rgba(232, 164, 76, 0.4);
+.contact-discord:hover,
+.contact-email:hover {
+  border-color: var(--accent);
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(232, 164, 76, 0.08);
+  box-shadow: 0 4px 20px rgba(232, 164, 76, 0.1);
 }
 
-.contact-card-icon {
-  width: 42px;
-  height: 42px;
+.contact-discord-icon,
+.contact-email-icon {
+  width: 44px;
+  height: 44px;
   background: var(--accent-subtle);
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 1.2rem;
+  color: var(--accent);
   border: 1px solid rgba(232, 164, 76, 0.2);
 }
 
-.contact-card-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.2rem;
+.contact-link-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.15rem;
 }
 
-.contact-card-value {
-  font-size: 0.95rem;
-  font-weight: 600;
+.contact-link-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   font-family: 'JetBrains Mono', monospace;
+}
+
+.contact-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.contact-qr img {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: #fff;
+  padding: 8px;
+}
+
+.contact-qr-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+@media (max-width: 640px) {
+  .contact-wrapper {
+    flex-direction: column;
+  }
 }
 
 /* Footer */
