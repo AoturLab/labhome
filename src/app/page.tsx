@@ -572,7 +572,7 @@ function Contact() {
           </motion.p>
 
           <motion.div custom={3} variants={fadeUp} className="contact-grid">
-            {/* Left: Discord — wider, spans full height */}
+            {/* Left: Discord — 3fr, link button only, no QR */}
             <motion.div
               className="contact-discord-wrapper"
               initial={{ opacity: 0, y: 20 }}
@@ -594,65 +594,36 @@ function Contact() {
                 )}</div>
                 <div className="contact-discord-body">
                   <p className="contact-item-label">Discord</p>
-                  <p className="contact-item-desc">讨论群</p>
-                </div>
-                <div className="contact-qr">
-                  <img src="/discord-qr.png" alt="Discord QR Code" width="72" height="72" />
+                  <p className="contact-item-desc">加入讨论群</p>
                 </div>
               </a>
             </motion.div>
 
-            {/* Right: Twitter + Email stacked */}
-            <div className="contact-right-stack">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -4 }}
+            {/* Right: Twitter only — 2fr, icon-focused */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -4 }}
+            >
+              <a
+                href="https://x.com/longchen_i"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-item"
               >
-                <a
-                  href="https://x.com/longchen_i"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="contact-item"
-                >
-                  <div className="contact-item-icon">{(
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                    </svg>
-                  )}</div>
-                  <div>
-                    <p className="contact-item-label">Twitter / X</p>
-                    <p className="contact-item-desc">@longchen_i</p>
-                  </div>
-                </a>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -4 }}
-              >
-                <a
-                  href="mailto:chenlong@aotur.com"
-                  className="contact-item"
-                >
-                  <div className="contact-item-icon">{(
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                      <polyline points="22,6 12,13 2,6" />
-                    </svg>
-                  )}</div>
-                  <div>
-                    <p className="contact-item-label">Email</p>
-                    <p className="contact-item-desc">chenlong@aotur.com</p>
-                  </div>
-                </a>
-              </motion.div>
-            </div>
+                <div className="contact-item-icon">{(
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                )}</div>
+                <div>
+                  <p className="contact-item-label">Twitter / X</p>
+                  <p className="contact-item-desc">@longchen_i</p>
+                </div>
+              </a>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
@@ -674,6 +645,9 @@ function Footer() {
           </a>
           <a href="https://x.com/longchen_i" target="_blank" rel="noopener noreferrer">
             Twitter
+          </a>
+          <a href="mailto:chenlong@aotur.com">
+            Email
           </a>
         </div>
       </div>
