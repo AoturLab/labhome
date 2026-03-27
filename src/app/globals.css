@@ -663,6 +663,20 @@ nav {
   margin: 0 auto;
 }
 
+/* motion.div wrapper inside contact-grid — must stretch to full height */
+.contact-grid > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* card anchor fills full height */
+.contact-grid .contact-item,
+.contact-grid .contact-item.contact-discord-card {
+  height: 100%;
+  width: 100%;
+}
+
 /* Unified card base — all three cards share the same structure */
 .contact-item {
   position: relative;
