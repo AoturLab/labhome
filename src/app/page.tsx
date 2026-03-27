@@ -625,16 +625,12 @@ function Contact() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="contact-discord-card"
+                    className="contact-item contact-discord-card"
                   >
-                    <div className="contact-discord-left">
-                      <div className="contact-item-icon">{item.icon}</div>
-                      <div>
-                        <p className="contact-item-label">{item.label}</p>
-                        <p className="contact-item-desc">{item.desc}</p>
-                      </div>
-                    </div>
-                    <div className="contact-discord-right">
+                    <div className="contact-item-icon">{item.icon}</div>
+                    <p className="contact-item-label">{item.label}</p>
+                    <p className="contact-item-desc">{item.desc}</p>
+                    <div className="contact-qr">
                       <img src="/discord-qr.png" alt="Discord QR Code" width="72" height="72" />
                     </div>
                   </a>

@@ -663,56 +663,49 @@ nav {
   margin: 0 auto;
 }
 
-.contact-discord-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem;
-  background: var(--bg-base);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  text-decoration: none;
-  color: var(--text-primary);
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.contact-discord-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 4px 20px rgba(232, 164, 76, 0.1);
-}
-
-.contact-discord-left {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.contact-discord-right img {
-  border-radius: 6px;
-  background: #fff;
-  padding: 4px;
-  border: 1px solid var(--border);
-}
-
+/* Unified card base — all three cards share the same structure */
 .contact-item {
+  position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1.25rem;
+  gap: 0.5rem;
+  padding: 1.5rem 1.25rem;
   background: var(--bg-base);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   text-decoration: none;
   color: var(--text-primary);
   transition: border-color 0.2s, box-shadow 0.2s;
-  flex-direction: column;
   text-align: center;
 }
 
 .contact-item:hover {
   border-color: var(--accent);
   box-shadow: 0 4px 20px rgba(232, 164, 76, 0.1);
+}
+
+/* Discord card — QR code positioned absolutely top-right */
+.contact-discord-card {
+  overflow: visible;
+}
+
+.contact-qr {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.contact-qr img {
+  border-radius: 6px;
+  background: #fff;
+  padding: 4px;
+  border: 1px solid var(--border);
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }
 
 .contact-item-icon {
