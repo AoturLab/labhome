@@ -504,23 +504,18 @@ function Projects() {
                           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
                         >
                           <p className="skill-install-hint">
-                            Copy and send to your bot:
+                            Run in terminal:
                           </p>
-                          <div className="skill-message-box">
-                            <p className="skill-message-text">
-                              Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the {project.name} skill.
-                            </p>
-                          </div>
                           <div className="skill-install-copy-row">
                             <div className="skill-step-command">
                               <code>clawhub install {project.name}</code>
                             </div>
                             <motion.button
                               className="skill-copy-btn"
-                              onClick={() => copyCommand(`Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.`)}
+                              onClick={() => copyCommand(`clawhub install ${project.name}`)}
                               whileTap={{ scale: 0.92 }}
                             >
-                              {copied === `Please first check if ClawHub store is installed. If not, install ClawHub store, but only the CLI, then install the ${project.name} skill.` ? "✓ Copied" : "Copy Text"}
+                              {copied === `clawhub install ${project.name}` ? "✓ Copied" : "Copy"}
                             </motion.button>
                           </div>
                         </motion.div>
